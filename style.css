@@ -107,6 +107,8 @@ input {
 
 button {
     padding: 10px;
+    margin-left: auto;
+    width: fit-content;
     background-color: #4CAF50;
     color: white;
     border: none;
