@@ -17,12 +17,17 @@
             echo "<h1>Bem Vindo ". $_SESSION['nome']; echo "</h1>";
             echo 
             "
-                <form action='../methods/realizarLogout.php'>
-                    <input class = 'botaoSair' type='submit' value='Sair'>
-                </form>        
+                <form class = 'login' action='../methods/realizarLogout.php'>
+                    <input class = 'login' type='submit' value='Sair'>
+                </form>       
             ";
         } else {
-            echo "<h1>Bem Vindo</h1>";
+            ?>
+                <div class='header_title'>
+                    <h1>Bem Vindo</h1>  
+                    <a class='login' href='login.php'>Login/Registro</a>
+                </div>
+            <?php
         }
     ?>  
     <!-- penso em pegar o nome dele -> esse trechinho aqui em cima vai fazer isso -->
@@ -31,7 +36,6 @@
     <a id="op1" href="sobre.php"> Sobre nós </a>
     <a id="op2" href="reservas.php"> Ver reservas</a>
     <a id="op3" href="user.php"> Reservar Horário </a>
-    <a id="op5" href="login.php">Login/Registro</a>
 </nav>
 
 <div class = "txt">
@@ -41,7 +45,7 @@
     <main>
         <section id = "agendamento">
             <h2>Solicitar Agendamento</h2>
-            <form id="form-agendamento">
+            <form id = "form-agendamento">
                 <label for="data">Data:</label>
                 <input type="date" id="data" name="data" required>
                 <label for="horario">Horário:</label>

@@ -17,9 +17,9 @@
             echo "<h1>Bem Vindo ". $_SESSION['nome']; echo "</h1>";
             echo 
             "
-                <form action='../methos/relizarLogout.php'>
-                    <input class = 'botaoSair' type='submit' value='Sair'>
-                </form>        
+                <form class='login' action='../methods/realizarLogout.php'>
+                    <input class = 'login' type='submit' value='Sair'>
+                </form>      
             ";
         } else {
             echo "<h1>Bem Vindo</h1>";
