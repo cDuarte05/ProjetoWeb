@@ -1,4 +1,4 @@
-<?php
+    <?php
     session_start();
     include "../methods/conection.php";
 ?>
@@ -38,7 +38,10 @@
 <nav id="menu">
     <a id="op1" href="index.html"> Sobre nós </a>
     <a id="op2" href="reservas.php"> Ver reservas</a>
-    <a id="op3" href="registroEspacos.php"> Registrar espaço </a> <!-- botão nao pegando-->
+    <a id="op3" href="user.php"> Reservar Horário </a>
+    <?php if (isset($_SESSION['usuario'])) {
+            if($_SESSION['usuario'] == "admin") {echo " <a id='op3' href='registroEspacos.php'> Cadastrar espaço </a>";}
+        }?>
 </nav>
 <div class = "txt">
     <h3>Acesse sua conta, ou registre caso não possua uma.</h3>
@@ -48,10 +51,10 @@
             <h2>Realizar Login</h2>
             <form id="form-agendamento" action="../methods/realizarLogin.php" method="POST">
                 <label for="usuario">Usuario:</label>
-                <input type="text" id="usuario" name="usuario" required>
+                <input type="text" id="usuario" name="usuario" required placeholder="Insíra aqui seu nome de usuário">
 
                 <label for="senha">Senha:</label>
-                <input type="password" id="senha" name="senha" required>
+                <input type="password" id="senha" name="senha" required placeholder="Insíra aqui sua senha">
 
                 <button type="submit">Login</button>
             </form> <br><br>
@@ -59,13 +62,13 @@
             <h2>Registrar Conta</h2>
             <form id="form-agendamento" action="../methods/registrarConta.php" method="POST">
                 <label for="nome">Nome:</label>
-                <input type="text" id="nome" name="nome" required>
+                <input type="text" id="nome" name="nome" required placeholder="Insíra aqui o nome da pessoa que quer registrar">
 
                 <label for="novoUsuario">Usuário:</label>
-                <input type="text" id="novoUsuario" name="novoUsuario" required>
+                <input type="text" id="novoUsuario" name="novoUsuario" required placeholder="Insíra aqui o nome de usuário que quer registrar">
 
                 <label for="novaSenha">Senha:</label>
-                <input type="password" id="novaSenha" name="novaSenha" required>
+                <input type="password" id="novaSenha" name="novaSenha" required placeholder="Insíra aqui a senha do usuário que quer registrar">
                 
                 <button type="submit">Registrar</button>
             </form>

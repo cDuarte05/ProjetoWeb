@@ -1,6 +1,6 @@
 <?php
 session_start();
-include "conexao.php";
+include "../methods/conection.php";
 if (!isset($_SESSION["usuario"]) || $_SESSION["usuario"] != "admin") {
     header("Location: login.php");
     exit(); //adicionar um tempo e mensagem de alert
@@ -49,12 +49,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['filtrar_agendamentos']
 <header>
     <h1>Gerenciamento de Espaços</h1>
     <h2>Bem-vindo, Administrador</h2>
+    <form class = 'login' action='../methods/realizarLogout.php'>
+        <input class = 'login' type='submit' value='Sair'>
+    </form>   
 </header>
 
 <nav id="menu">
+    <a id="op1" href="index.html"> Sobre nós </a>
     <a href="reservas.php">Ver reservas</a>
 <!-- no decorrer das funções, adicionar no menu-->
-    <a href="../methods/realizarlogout.php">Sair</a>
 </nav>
 
 <main>

@@ -12,7 +12,7 @@
         $senha = $_SESSION['senha'];
         $sql_query = "UPDATE usuario SET senha = '$novaSenha' WHERE nomeUsuario = '$usuario' AND senha = '$senha' ";
         echo "<head>";
-        echo "    <meta http-equiv = 'refresh' content = '3; url = ../pages/login.php'/>;";
+        echo "    <meta http-equiv = 'refresh' content = '3; url = ../pages/login.php'/>";
         echo "</head>";
         try {
             mysqli_query($conection, $sql_query);
