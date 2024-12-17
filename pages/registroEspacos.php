@@ -1,131 +1,162 @@
 <?php
 session_start();
 include "../methods/conection.php";
+
+// Verificação de permissão
 if (!isset($_SESSION["usuario"]) || $_SESSION["usuario"] != "admin") {
-    header("Location: login.php");
-    exit(); //adicionar um tempo e mensagem de alert
+    echo "<script>alert('Acesso negado! Redirecionando para o login.');</script>";
+    header("Refresh: 3; url=login.php");
+    exit();
 }
 
-if($_SERVER['REQUEST_METHOD'] == 'POST' && isset ($_POST['cadastrar_espaco'])){
-    $espacoName = $_POST['nome_espaco'];
-    $descricao = $_POST['descricao'];
+// Cadastro de disponibilidade
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['cadastrar_disponibilidade'])) {
+    $data = $_POST['data_disponivel'];
+    $horarioInicio = $_POST['horario_inicio'];
+    $horarioFim = $_POST['horario_fim'];
 
-    $SQL = "INSERT INTO espacos (nome, descricao) value ('$espacoName', '$descricao')";   
-    $resultado = mysqli_query($conection,$SQL);
-    if(mysqli_num_rows($resultado) > 0){
-        echo "Operação realizada com sucesso !";
-    }else{
-        echo "ERRO, nenhuma linha alterada";
+    $SQL = "INSERT INTO disponibilidade (data, horario_inicio, horario_fim, status) VALUES ('$data', '$horarioInicio', '$horarioFim', 'livre')";
+    $resultado = mysqli_query($conection, $SQL);
+
+    if ($resultado) {
+        echo "<script>alert('Disponibilidade cadastrada com sucesso!');</script>";
+    } else {
+        echo "<script>alert('Erro ao cadastrar disponibilidade: " . mysqli_error($conection) . "');</script>";
     }
 }
-    //consulta e preparação do filtro
+
+// Consulta de disponibilidade
 $filtro = "";
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['filtrar_agendamentos'])) {
-    $espacoSelecionado = $_POST['espaco'];
-    $mesSelecionado = $_POST['mes'];
-
-     $filtro = "WHERE 1=1";
-    if ($espacoSelecionado != "") {
-        $filtro .= " AND espaco_id = '$espacoSelecionado'";
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['filtrar_disponibilidade'])) {
+    $dataFiltro = $_POST['data_filtro'];
+    if (!empty($dataFiltro)) {
+        $filtro = "WHERE data = '$dataFiltro'";
     }
-    if ($mesSelecionado != "") {
-        $filtro .= " AND MONTH(data_agendamento) = '$mesSelecionado'";
+}
+
+// Liberar horário reservado
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['liberar_horario'])) {
+    $id = $_POST['id_disponibilidade'];
+
+    $sqlLiberar = "UPDATE disponibilidade SET status = 'livre' WHERE id = '$id'";
+    $resultadoLiberar = mysqli_query($conection, $sqlLiberar);
+
+    if ($resultadoLiberar) {
+        echo "<script>alert('Horário liberado com sucesso!');</script>";
+    } else {
+        echo "<script>alert('Erro ao liberar horário: " . mysqli_error($conection) . "');</script>";
     }
 }
 ?>
 
-<?php
-    mysqli_close($conection);
-?>
 <!DOCTYPE html>
-<html lang="PT-BR">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../style.css">
-    <title>Gerenciar Espaços</title>
+    <title>Gerenciar Auditório</title>
 </head>
 <body>
 <header>
-    <h1>Gerenciamento de Espaços</h1>
+    <h1>Gerenciamento do Auditório</h1>
     <h2>Bem-vindo, Administrador</h2>
-    <form class = 'login' action='../methods/realizarLogout.php'>
-        <input class = 'login' type='submit' value='Sair'>
-    </form>   
+    <form class='login' action='../methods/realizarLogout.php'>
+        <input class='login' type='submit' value='Sair'>
+    </form>
 </header>
 
 <nav id="menu">
     <a id="op1" href="index.html"> Sobre nós </a>
-    <a href="reservas.php">Ver reservas</a>
-<!-- no decorrer das funções, adicionar no menu-->
+    <a id="op2" href="reservas.php"> Ver reservas</a>
+    <a id="op3" href="user.php"> Reservar Horário </a>
+    <?php if (isset($_SESSION['usuario'])) {
+            if($_SESSION['usuario'] == "admin") {echo " <a id='op3' href='registroEspacos.php'> Cadastrar espaço </a>";}
+        }?>
 </nav>
 
 <main>
-    <!-- Formulário para cadastro de novos espaços -->
+    <!-- Cadastro de disponibilidade -->
     <section>
-        <h2>Cadastrar Novo Espaço</h2>
+        <h2>Cadastrar Disponibilidade do Auditório</h2>
         <form action="" method="POST">
-            <label for="nome_espaco">Nome do Espaço:</label>
-            <input type="text" id="nome_espaco" name="nome_espaco" required>
+            <label for="data_disponivel">Data:</label>
+            <input type="date" id="data_disponivel" name="data_disponivel" required>
 
-            <label for="descricao">Descrição:</label>
-            <textarea id="descricao" name="descricao" rows="3" required></textarea>
+            <label for="horario_inicio">Horário de Início:</label>
+            <input type="time" id="horario_inicio" name="horario_inicio" required>
 
-            <button type="submit" name="cadastrar_espaco">Cadastrar</button>
+            <label for="horario_fim">Horário de Fim:</label>
+            <input type="time" id="horario_fim" name="horario_fim" required>
+
+            <button type="submit" name="cadastrar_disponibilidade">Cadastrar</button>
         </form>
     </section>
 
-    <!-- Consulta de agendamentos -->
+    <!-- Consulta de disponibilidade -->
     <section>
-        <h2>Consultar Agendamentos</h2>
+        <h2>Consultar Disponibilidade do Auditório</h2>
         <form action="" method="POST">
-            <label for="espaco">Filtrar por Espaço:</label>
-            <select id="espaco" name="espaco">
-                <option value="">Todos</option>
-                <?php
-                    $SQL = "SELECT id, nome from espacos";
-                    $resultado = mysqli_query( $conection,$SQL); 
-                    while ($row = mysqli_fetch_assoc($resultado)) {
-                        echo "<option value='" . $row['id'] . "'>" . $row['nome'] . "</option>";
-                    }
-                ?>
-            </select>
+            <label for="data_filtro">Filtrar por Data:</label>
+            <input type="date" id="data_filtro" name="data_filtro">
 
-            <label for="mes">Filtrar por Mês:</label>
-            <select id="mes" name="mes">
-                <option value="">Todos</option>
-                <?php
-                    for ($i = 1; $i <= 12; $i++) {
-                        echo "<option value='$i'>$i</option>";
-                    }
-                ?>
-            </select>
-
-            <button type="submit" name="filtrar_agendamentos">Consultar</button>
+            <button type="submit" name="filtrar_disponibilidade">Consultar</button>
         </form>
 
-        <h3>Resultados:</h3>
+        <h3>Horários Disponíveis:</h3>
         <table border="1">
             <tr>
-                <th>ID</th>
-                <th>Espaço</th>
                 <th>Data</th>
-                <th>Horário</th>
+                <th>Horário de Início</th>
+                <th>Horário de Fim</th>
                 <th>Status</th>
             </tr>
             <?php
-                $sql = "SELECT agendamentos.id, espacos.nome AS espaco, agendamentos.data, agendamentos.horario, agendamentos.status 
-                        FROM agendamentos 
-                        JOIN espacos ON agendamentos.espaco_id = espacos.id
-                        $filtro"; //variavel definida la em cima
+                $sql = "SELECT * FROM disponibilidade $filtro ORDER BY data, horario_inicio";
                 $resultado = mysqli_query($conection, $sql);
+
                 while ($row = mysqli_fetch_assoc($resultado)) {
                     echo "<tr>
-                            <td>" . $row['id'] . "</td>
-                            <td>" . $row['espaco'] . "</td>
-                            <td>" . $row['data'] . "</td>
-                            <td>" . $row['horario'] . "</td>
-                            <td>" . $row['status'] . "</td>
+                            <td>{$row['data']}</td>
+                            <td>{$row['horario_inicio']}</td>
+                            <td>{$row['horario_fim']}</td>
+                            <td>{$row['status']}</td>
+                          </tr>";
+                }
+            ?>
+        </table>
+    </section>
+
+    <!-- Liberar horários reservados -->
+    <section>
+        <h2>Gerenciar Horários Reservados</h2>
+        <h3>Horários Reservados:</h3>
+        <table border="1">
+            <tr>
+                <th>ID</th>
+                <th>Data</th>
+                <th>Horário de Início</th>
+                <th>Horário de Fim</th>
+                <th>Status</th>
+                <th>Ação</th>
+            </tr>
+            <?php
+                $sqlReservados = "SELECT * FROM disponibilidade WHERE status = 'reservado' ORDER BY data, horario_inicio";
+                $resultadoReservados = mysqli_query($conection, $sqlReservados);
+
+                while ($rowReservado = mysqli_fetch_assoc($resultadoReservados)) {
+                    echo "<tr>
+                            <td>{$rowReservado['id']}</td>
+                            <td>{$rowReservado['data']}</td>
+                            <td>{$rowReservado['horario_inicio']}</td>
+                            <td>{$rowReservado['horario_fim']}</td>
+                            <td>{$rowReservado['status']}</td>
+                            <td>
+                                <form action='' method='POST'>
+                                    <input type='hidden' name='id_disponibilidade' value='{$rowReservado['id']}'>
+                                    <button type='submit' name='liberar_horario'>Liberar</button>
+                                </form>
+                            </td>
                           </tr>";
                 }
             ?>
@@ -138,4 +169,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['filtrar_agendamentos']
 </footer>
 </body>
 </html>
-
+<?php
+mysqli_close($conection);
+?>
