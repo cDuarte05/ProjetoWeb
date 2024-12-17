@@ -43,7 +43,7 @@
     <p>Somos a ONG Natureza Viva</p>
 </div>
     <main>
-        <section id = "agendamento">
+    <section id = "agendamento">
             <h2>Solicitar Agendamento</h2>
             <form id = "form-agendamento">
                 <label for="data">Data:</label>
@@ -57,5 +57,3 @@
     </main>
 </body>
 </html>
-
-<?php echo "só pra não apontar hack"?>

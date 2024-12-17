@@ -1,5 +1,6 @@
 <?php
     session_start();
+    include "../methods/conection.php";
 ?>
 
 <!DOCTYPE html>
@@ -35,9 +36,9 @@
     ?>
 </header>
 <nav id="menu">
-    <a id="op1" href="sobre.php"> Sobre nós </a>
+    <a id="op1" href="index.html"> Sobre nós </a>
     <a id="op2" href="reservas.php"> Ver reservas</a>
-    <a id="op3" href="user.php"> Reservar Horário </a>
+    <a id="op3" href="registroEspacos.php"> Registrar espaço </a> <!-- botão nao pegando-->
 </nav>
 <div class = "txt">
     <h3>Acesse sua conta, ou registre caso não possua uma.</h3>
