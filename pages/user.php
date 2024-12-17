@@ -21,8 +21,8 @@ if (!isset($_SESSION['usuario'])) {
 
 <body>
     <header>
-        <h1>Bem-vindo, <?= $_SESSION['nome'] ?>!</h1>
-        <h2>Você está na conta <?= $_SESSION['usuario'] ?></h2>
+        <h1>Bem-vindo, <?= htmlspecialchars($_SESSION['nome']) ?>!</h1>
+        <h2>Você está na conta <?= htmlspecialchars($_SESSION['usuario']) ?></h2>
         <form class="login" action="../methods/realizarLogout.php" method="post">
             <input class="login" type="submit" value="Sair">
         </form>
@@ -42,45 +42,46 @@ if (!isset($_SESSION['usuario'])) {
             <h2>Agendamento de Auditório</h2>
 
             <?php
-            // Consultar agendamentos do auditório
-            $usuario_id = $_SESSION['usuario']; // Converte para string diretamente
-            $query_agendamentos = "SELECT id, data_agendamento, horario_inicio, horario_fim FROM agendamentos WHERE usuario_id = ?";
+            $usuario_id = $_SESSION['usuario'];
+            $query_agendamentos = "
+                SELECT id, data_agendamento, horario_inicio, horario_fim, status 
+                FROM agendamentos 
+                WHERE usuario_id = ?
+            ";
             $stmt_agendamentos = $conection->prepare($query_agendamentos);
-            $stmt_agendamentos->bind_param('s', $usuario_id); // Bind de string
+            $stmt_agendamentos->bind_param('s', $usuario_id);
             $stmt_agendamentos->execute();
             $result_agendamentos = $stmt_agendamentos->get_result();
             $agendamentos = $result_agendamentos->fetch_all(MYSQLI_ASSOC);
 
-            // Consultar horários disponíveis que não estão reservados
-            $query_disponibilidade = "
-            SELECT d.data, d.horario_inicio, d.horario_fim 
-            FROM disponibilidade d
-            WHERE d.status = 'livre' 
-              AND NOT EXISTS (
-                  SELECT 1 
-                  FROM agendamentos a 
-                  WHERE a.data_agendamento = d.data 
-                    AND a.horario_inicio = d.horario_inicio
-                    AND a.horario_fim = d.horario_fim
-                    AND a.usuario_id = ?
-              )
-            ";
-            $stmt_disponibilidade = $conection->prepare($query_disponibilidade);
-            $stmt_disponibilidade->bind_param('s', $usuario_id); // Bind de string
-            $stmt_disponibilidade->execute();
-            $result_disponibilidade = $stmt_disponibilidade->get_result();
-            $horarios_disponiveis = $result_disponibilidade->fetch_all(MYSQLI_ASSOC);
-
             if (count($agendamentos) > 0) {
-                echo "<p>Você já tem agendamentos para o auditório:</p>";
-                echo "<ul>";
+                echo "<p>Você já tem agendamentos para o auditório:</p><ul>";
                 foreach ($agendamentos as $agendamento) {
-                    echo "<li>Data: " . htmlspecialchars($agendamento['data_agendamento']) . " - Horário: " . htmlspecialchars($agendamento['horario_inicio']) . " - " . htmlspecialchars($agendamento['horario_fim']) . " - Status: " . htmlspecialchars($agendamento['status']) . "</li>";
+                    echo "<li>Data: " . htmlspecialchars($agendamento['data_agendamento']) . 
+                         " - Horário: " . htmlspecialchars($agendamento['horario_inicio']) . 
+                         " - " . htmlspecialchars($agendamento['horario_fim']) . 
+                         " - Status: " . htmlspecialchars($agendamento['status']) . "</li>";
                 }
                 echo "</ul>";
             } else {
                 echo "<p>Você não tem agendamentos para o auditório.</p>";
             }
+
+            // Consultar horários disponíveis
+            $query_disponibilidade = "
+                SELECT data, horario_inicio, horario_fim 
+                FROM disponibilidade 
+                WHERE status = 'livre' 
+                AND NOT EXISTS (
+                    SELECT 1 
+                    FROM agendamentos 
+                    WHERE agendamentos.data_agendamento = disponibilidade.data
+                      AND agendamentos.horario_inicio = disponibilidade.horario_inicio
+                      AND agendamentos.horario_fim = disponibilidade.horario_fim
+                )
+            ";
+            $result_disponibilidade = $conection->query($query_disponibilidade);
+            $horarios_disponiveis = $result_disponibilidade->fetch_all(MYSQLI_ASSOC);
             ?>
 
             <h2>Horários e Dias Disponíveis</h2>
@@ -119,7 +120,5 @@ if (!isset($_SESSION['usuario'])) {
             </section>
         </section>
     </main>
-
 </body>
-
 </html>
