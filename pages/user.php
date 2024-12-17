@@ -36,7 +36,7 @@
     <a id="op2" href="reservas.php"> Ver reservas</a>
     <a id="op3" href="user.php"> Reservar Horário </a>
     <?php if (isset($_SESSION['usuario'])) {
-            if($_SESSION['usuario'] == "admin") {echo " <a id='op3' href='registroEspacos.php'>Cadastrar espaço</a>";}
+            if($_SESSION['usuario'] == "admin") {echo " <a id='op3' href='gerenciamentoHorario.php'>Cadastrar horarios</a>";}
         }?>
 </nav>
 

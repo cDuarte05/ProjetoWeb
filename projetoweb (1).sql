@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 17, 2024 at 07:12 PM
+-- Generation Time: Dec 17, 2024 at 07:39 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -37,6 +37,27 @@ CREATE TABLE `agendamentos` (
   `status` enum('pendente','confirmado','aberto_com_ocorrencia','finalizado') DEFAULT 'pendente',
   `avaliacao` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `disponibilidade`
+--
+
+CREATE TABLE `disponibilidade` (
+  `id` int(11) NOT NULL,
+  `data` date NOT NULL,
+  `horario_inicio` time NOT NULL,
+  `horario_fim` time NOT NULL,
+  `status` enum('livre','reservado') DEFAULT 'livre'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `disponibilidade`
+--
+
+INSERT INTO `disponibilidade` (`id`, `data`, `horario_inicio`, `horario_fim`, `status`) VALUES
+(2, '2005-09-20', '12:00:00', '13:50:00', 'livre');
 
 -- --------------------------------------------------------
 
@@ -107,6 +128,12 @@ ALTER TABLE `agendamentos`
   ADD KEY `espaco_id` (`espaco_id`);
 
 --
+-- Indexes for table `disponibilidade`
+--
+ALTER TABLE `disponibilidade`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `espacos`
 --
 ALTER TABLE `espacos`
@@ -134,6 +161,12 @@ ALTER TABLE `usuario`
 --
 ALTER TABLE `agendamentos`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `disponibilidade`
+--
+ALTER TABLE `disponibilidade`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `espacos`
