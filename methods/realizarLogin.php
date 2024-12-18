@@ -34,9 +34,9 @@
         $_SESSION['senha'] = $conta[2];
         if ($conta[0] == 'admin') {
             if ($conta[2] == '123456') {
-                echo "Como primeiro acesso de administrador, por favor, altere a senha: <br>"
                 ?>
                     <div class="popup">
+                        <p>Como primeiro acesso de administrador, por favor, altere a senha: <br></p>
                         <form action="alterarSenha.php" method="POST">
                             <input style="width: 200px;" required name="novaSenha" type="password" placeholder="Insíra a nova senha de admin">
                             <input type="submit" value="Alterar">
@@ -45,7 +45,7 @@
                 <?php
             } else {
                 echo "<head>";
-                echo "    <meta http-equiv = 'refresh' content = '4; url = ../pages/login.php'/>";
+                echo "    <meta http-equiv = 'refresh' content = '2; url = ../pages/login.php'/>";
                 echo "    <link rel='stylesheet' href='../style.css'>";
                 echo "</head>";
                 ?>
@@ -56,7 +56,7 @@
             }
         } else {
             echo "<head>";
-            echo "    <meta http-equiv = 'refresh' content = '4; url = ../pages/login.php'/>";
+            echo "    <meta http-equiv = 'refresh' content = '2; url = ../pages/login.php'/>";
             echo "    <link rel='stylesheet' href='../style.css'>";
             echo "</head>";
             ?>

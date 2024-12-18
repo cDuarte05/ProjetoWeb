@@ -1,5 +1,5 @@
 <head>
-    <meta http-equiv = 'refresh' content = '3; url = ../pages/login.php'>
+    <meta http-equiv = 'refresh' content = '2; url = ../pages/index.html'>
     <link rel='stylesheet' href='../style.css'>
 </head>
 <?php

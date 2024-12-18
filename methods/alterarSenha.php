@@ -2,10 +2,9 @@
     include("conection.php");
     session_start();
     if (!isset($_SESSION['usuario'])) {
-        echo "<head>";
-        echo "    <meta http-equiv = 'refresh' content = '3; url = ../pages/login.php'/>;";
-        echo "</head>";
-        echo "Você não possue nenhuma conta conectada <br>";
+        echo"<script>alert('Por favor, acesse uma conta para ter acesso à essa página')</script>";
+        header("Location: login.php"); // Redireciona para a página de login se o usuário não estiver logado
+        exit;
     } else {
         $novaSenha = $_POST['novaSenha'];
         $usuario = $_SESSION['usuario'];

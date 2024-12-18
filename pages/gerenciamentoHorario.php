@@ -1,6 +1,7 @@
 <?php
 session_start();
 include "../methods/conection.php";
+$now = date('Y-m-d');
 
 // Verificação de permissão
 if (!isset($_SESSION["usuario"]) || $_SESSION["usuario"] != "admin") {
@@ -30,7 +31,7 @@ $filtro = "";
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['filtrar_disponibilidade'])) {
     $dataFiltro = $_POST['data_filtro'];
     if (!empty($dataFiltro)) {
-        $filtro = "WHERE data = '$dataFiltro'";
+        $filtro = ", data = '$dataFiltro'";
     }
 }
 
@@ -44,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['deletar_horario'])) {
     $dados = mysqli_fetch_assoc($resultadoVerificacao);
 
     if ($dados['total'] > 0) {
-        echo "<script>alert('Não é possível deletar. Existem agendamentos associados a este horário.');</script>";
+        echo "<script>alert('Não é possível deletar. Existem agendamentos pendentes associados a este horário.');</script>";
     } else {
         $SQL = "DELETE FROM disponibilidade WHERE id = '$id'";
         $resultado = mysqli_query($conection, $SQL);
@@ -70,7 +71,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['alterar_horario'])) {
     $dados = mysqli_fetch_assoc($resultadoVerificacao);
 
     if ($dados['total'] > 0) {
-        echo "<script>alert('Não é possível alterar. Existem agendamentos associados a este horário.');</script>";
+        echo "<script>alert('Não é possível alterar. Existem agendamentos pendentes associados a este horário.');</script>";
     } else {
         $SQL = "UPDATE disponibilidade SET data = '$novaData', horario_inicio = '$novoInicio', horario_fim = '$novoFim' WHERE id = '$id'";
         $resultado = mysqli_query($conection, $SQL);
@@ -94,6 +95,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['alterar_horario'])) {
 </head>
 <body>
 <header>
+<img class="logo" src="../images/logomarca.png" alt="Logo da ONG, duas mãos em formato de concha segurando uma planta crescendo, em estilo de desenho simples.">
     <h1>Gerenciamento do Auditório</h1>
     <h2>Bem-vindo, Administrador</h2>
     <form class='login' action='../methods/realizarLogout.php'>
@@ -116,7 +118,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['alterar_horario'])) {
         <h2>Cadastrar Disponibilidade do Auditório</h2>
         <form action="" method="POST">
             <label for="data_disponivel">Data:</label>
-            <input type="date" id="data_disponivel" name="data_disponivel" required>
+            <input type="date" id="data_disponivel" name="data_disponivel" min='<?php echo"$now"; ?>' required>
 
             <label for="horario_inicio">Horário de Início:</label>
             <input type="time" id="horario_inicio" name="horario_inicio" required>
@@ -139,16 +141,55 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['alterar_horario'])) {
         </form>
 
         <h3>Horários Disponíveis:</h3>
-        <table border="1">
+        <div class="table">
+            <table>
+                <tr>
+                    <th>Data</th>
+                    <th>Horário de Início</th>
+                    <th>Horário de Fim</th>
+                    <th>Status</th>
+                    <th>Ações</th>
+                </tr>
+                <?php
+                    $sql = "SELECT * FROM disponibilidade WHERE status = 'livre'$filtro ORDER BY data, horario_inicio";
+                    $resultado = mysqli_query($conection, $sql);
+
+                    while ($row = mysqli_fetch_assoc($resultado)) {
+                        echo "<tr>
+                                <td>{$row['data']}</td>
+                                <td>{$row['horario_inicio']}</td>
+                                <td>{$row['horario_fim']}</td>
+                                <td>{$row['status']}</td>
+                                <td>
+                                    <form method='POST' style='display:inline;'>
+                                    <input type='hidden' name='id_disponibilidade' value='{$row['id']}'>                                    
+                                    <input type='date' min='$now' name='nova_data' required>
+                                    <input type='time' name='novo_inicio' required>
+                                    <input type='time' name='novo_fim' required>
+                                    
+                                    <button type='submit' name='alterar_horario'>Alterar</button>
+                                    </form>
+                                    <form method='POST' style='display:inline;'>
+                                        <input type='hidden' name='id_disponibilidade' value='{$row['id']}'>                                    
+                                        <button type='submit' name='deletar_horario'>Deletar</button>
+                                    </form>
+                                </td>
+                            </tr>";
+                    }
+                ?>
+            </table>
+        </div>
+        <h3>Horários Reservados:</h3>
+        <div class="table">
+        <table class="table">
             <tr>
                 <th>Data</th>
                 <th>Horário de Início</th>
                 <th>Horário de Fim</th>
                 <th>Status</th>
-                <th>Ações</th>
             </tr>
             <?php
-                $sql = "SELECT * FROM disponibilidade $filtro ORDER BY data, horario_inicio";
+                $sql = "SELECT * FROM disponibilidade WHERE status = 'reservado'$filtro ORDER BY data, horario_inicio";
                 $resultado = mysqli_query($conection, $sql);
 
                 while ($row = mysqli_fetch_assoc($resultado)) {
@@ -157,23 +198,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['alterar_horario'])) {
                             <td>{$row['horario_inicio']}</td>
                             <td>{$row['horario_fim']}</td>
                             <td>{$row['status']}</td>
-                            <td>
-                                <form action='' method='POST' style='display:inline;'>
-                                    <input type='hidden' name='id_disponibilidade' value='{$row['id']}'>
-                                    <button type='submit' name='deletar_horario'>Deletar</button><br>
-                                </form>
-                                <form action='' method='POST' style='display:inline;'>
-                                    <input type='hidden' name='id_disponibilidade' value='{$row['id']}'>
-                                    <input type='date' name='nova_data' required>
-                                    <input type='time' name='novo_inicio' required>
-                                    <input type='time' name='novo_fim' required>
-                                    <button type='submit' name='alterar_horario'>Alterar</button>
-                                </form>
-                            </td>
                           </tr>";
                 }
             ?>
         </table>
+        </div>
     </section>
 </main>
 

@@ -13,9 +13,15 @@
 </head>
 <body>
 <header>
+<img class="logo" src="../images/logomarca.png" alt="Logo da ONG, duas mãos em formato de concha segurando uma planta crescendo, em estilo de desenho simples.">
     <?php
         if (isset ($_SESSION['usuario'])) {
-            echo "<h1>Bem Vindo ". $_SESSION['nome']; echo "</h1>";
+            echo "<h1>Bem Vindo, ". $_SESSION['nome']; echo "</h1>";
+            if (isset ($_SESSION['usuario'])) {
+                echo "<h2>Você está na conta ". $_SESSION['usuario']; echo "</h2>";
+            } else {
+                echo "<h2>Você não está conectado em uma conta.</h2>";
+            }
             echo 
             "
                 <form class='login' action='../methods/realizarLogout.php'>
@@ -27,20 +33,13 @@
         }
     ?>
     <!-- penso em pegar o nome dele -> esse trechinho aqui em cima vai tentar fazer isso -->
-    <?php
-        if (isset ($_SESSION['usuario'])) {
-            echo "<h2>Você está na conta ". $_SESSION['usuario']; echo "</h2>";
-        } else {
-            echo "<h2>Você não está conectado em uma conta.</h2>";
-        }
-    ?>
 </header>
 <nav id="menu">
     <a id="op1" href="index.html"> Sobre nós </a>
     <a id="op2" href="reservas.php"> Ver reservas</a>
     <a id="op3" href="user.php"> Reservar Horário </a>
     <?php if (isset($_SESSION['usuario'])) {
-            if($_SESSION['usuario'] == "admin") {echo " <a id='op3' href='registroEspacos.php'> Cadastrar espaço </a>";}
+            if($_SESSION['usuario'] == "admin") {echo " <a id='op3' href='gerenciamentoHorario.php'> Cadastrar espaço </a>";}
         }?>
 </nav>
 <div class = "txt">

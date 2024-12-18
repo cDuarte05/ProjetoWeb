@@ -20,6 +20,7 @@ header {
 header h1 {
     margin-left: auto;
     margin-right: auto;
+    margin-bottom: -8px;
     width: fit-content;
     font-size: 2rem;
 }
@@ -109,6 +110,7 @@ input {
 
 button {
     padding: 10px;
+    margin-right: auto;
     margin-left: auto;
     width: fit-content;
     background-color: #4CAF50;
@@ -121,7 +123,26 @@ button {
 }
 
 button:hover {
-    background-color: #45a049;
+    background-color: #36813a;
+}
+
+div.table {
+    overflow-x: auto;
+}
+
+table {
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+table,th,td {
+    border: 1px solid darkgreen;
+    width: fit-content;
+}
+
+th,td {
+    padding: 4px;
 }
 
 ul {
@@ -136,6 +157,10 @@ ul li {
     border-radius: 5px;
 }
 
+input {
+    margin-bottom: 4px;
+}
+
 a.login,input.login {
     text-decoration: none;
     color: white;
@@ -143,12 +168,12 @@ a.login,input.login {
     height: fit-content;
     position: absolute;
     top: 50px;
-    right: 5px;
+    right: 15px;
     font-size: 1rem;
     font-weight: bold;
     background-color: #4CAF50;
     border:1px solid white;
-    border-radius: 500px;
+    border-radius: 5px;
     transition: background-color 0.3s ease;
 }
 
@@ -188,4 +213,126 @@ a.popup {
 a.popup:hover {
     transition: all ;
     background-color: #2E7D32;
+}
+
+img.logo {
+    width: 130px;
+}
+
+/* Estilos para telas com largura máxima de 1024px */
+@media (max-width: 1024px) {
+    header {
+        padding: 15px 5px;
+    }
+
+    header h1 {
+        font-size: 1.8rem;
+    }
+
+    #menu {
+        flex-wrap: wrap;
+        gap: 10px;
+        padding: 10px;
+    }
+
+    #menu a {
+        font-size: 0.9rem;
+        padding: 8px 15px;
+    }
+
+    .txt, main {
+        padding: 15px;
+        margin: 15px auto;
+    }
+
+    main h2 {
+        font-size: 1.3rem;
+    }
+
+    form input, form button {
+        font-size: 0.9rem;
+        padding: 8px;
+    }
+
+    form button {
+        width: 150px;
+    }
+
+    button {
+        font-size: 0.7rem;
+        width: 100%;
+    }
+
+    th,td {
+        padding: 4px;
+    }
+
+    div.popup {
+        margin-top: 10%;
+    }
+
+    img.logo {
+        width: 100px;
+    }
+}
+
+/* Estilos para telas com largura máxima de 728px */
+@media (max-width: 765px) {
+    header {
+        padding: 10px 5px;
+    }
+
+    header h1 {
+        visibility: hidden;
+        position: absolute;
+    }
+
+    #menu {
+        flex-direction: column;
+        align-items: center;
+        gap: 5px;
+    }
+
+    #menu a {
+        font-size: 0.8rem;
+        padding: 8px 10px;
+    }
+
+    .txt, main {
+        padding: 10px;
+        margin: 10px auto;
+        max-width: 90%;
+    }
+
+    main h2 {
+        font-size: 1.2rem;
+    }
+
+    form input, form button {
+        font-size: 0.8rem;
+        padding: 6px;
+    }
+
+    form button {
+        width: 100%;
+    }
+
+    button {
+        width: 100%;
+    }
+
+    ul li {
+        font-size: 0.9rem;
+        padding: 8px;
+    }
+
+    div.popup {
+        margin-top: 8%;
+        width: 90%;
+        padding: 10px;
+    }
+
+    img.logo {
+        width: 80px;
+    }
 }
