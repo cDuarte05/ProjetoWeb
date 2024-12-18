@@ -4,15 +4,28 @@
     $senha = $_POST['senha'];
     $usuario = strtolower($usuario);
     $sql_query = "SELECT * FROM usuario WHERE nomeusuario = '$usuario' AND senha = '$senha'";
+    ?>
+        <head>
+            <link rel='stylesheet' href='../style.css'>
+        </head>
+    <?php
     try {
         $login = mysqli_query($conection, $sql_query);
     } catch (mysqli_sql_exception $e) {
-        echo "Falha ao tentar se comunicar com o banco: ". $e->getMessage();
-        echo "<br><a href='../pages/login.php'>Voltar</a><br>";
+        ?>
+            <div class="popup">
+                <b><p class="popup">Erro ao comunicar com o banco: <?php echo "".$e->getMessage() ?></p></b>
+                <a class="popup" href='../pages/login.php'>Voltar</a>
+            </div>
+        <?php
     }
     if (mysqli_num_rows($login) == 0) {
-        echo "Usuário ou senha incorretos.";
-        echo "<br><a href='../pages/login.php'>Voltar</a><br>";
+        ?>
+            <div class="popup">
+                <b><p class="popup">Usuário ou senha incorretos</p></b>
+                <a class="popup" href='../pages/login.php'>Voltar</a>
+            </div>
+        <?php
     } else {
         session_start();
         $conta = mysqli_fetch_row($login);
@@ -21,30 +34,39 @@
         $_SESSION['senha'] = $conta[2];
         if ($conta[0] == 'admin') {
             if ($conta[2] == '123456') {
-                echo "Como primeiro acesso de administrador, por favor, altere a senha: <br>"
                 ?>
-                    <form action="alterarSenha.php" method="POST">
-                        <input style="width: 200px;" required name="novaSenha" type="password" placeholder="Insíra a nova senha de admin">
-                        <input type="submit" value="Alterar">
-                    </form>
+                    <head>
+                        <link rel='stylesheet' href='../style.css'>
+                    </head>
+                    <div class="popup">
+                        <p class="popup">Como primeiro acesso de administrador, por favor, altere a senha: <br></p>
+                        <form action="alterarSenha.php" method="POST">
+                            <input required name="novaSenha" type="password" placeholder="Insíra a nova senha de admin">
+                            <button type="submit">Alterar</button>
+                        </form>
+                    </div>
                 <?php
             } else {
                 echo "<head>";
-                echo "    <meta http-equiv = 'refresh' content = '4; url = ../pages/login.php'/>";
+                echo "    <meta http-equiv = 'refresh' content = '2; url = ../pages/login.php'/>";
+                echo "    <link rel='stylesheet' href='../style.css'>";
                 echo "</head>";
-                echo $_SESSION['usuario']; echo "<br>";
-                echo $_SESSION['nome']; echo "<br>";
-                echo $_SESSION['senha']; echo "<br>";
-                echo "Bem vindo Administrador, redirecionando para tela de login";
+                ?>
+                    <div class="popup">
+                        <b><p class="popup">Bem vindo <?php echo"{$_SESSION['usuario']}" ?>, redirecionando</p></b>
+                    </div>
+                <?php
             }
         } else {
             echo "<head>";
-            echo "    <meta http-equiv = 'refresh' content = '4; url = ../pages/login.php'/>";
+            echo "    <meta http-equiv = 'refresh' content = '2; url = ../pages/login.php'/>";
+            echo "    <link rel='stylesheet' href='../style.css'>";
             echo "</head>";
-            echo $_SESSION['usuario']; echo "<br>";
-            echo $_SESSION['nome']; echo "<br>";
-            echo $_SESSION['senha']; echo "<br>";
-            echo "Redirecionando a tela de login. <br> Essa tela só existe para motivos de teste e desenvolvimento.";   
+            ?>
+                <div class="popup">
+                    <b><p class="popup">Olá <?php echo"{$_SESSION['usuario']}" ?>, redirecionando</p></b>
+                </div>
+            <?php
         }
     }
 ?>

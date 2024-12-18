@@ -1,12 +1,22 @@
+<head>
+    <meta http-equiv = 'refresh' content = '2; url = ../pages/index.html'>
+    <link rel='stylesheet' href='../style.css'>
+</head>
 <?php
     session_start();
     if (isset ($_SESSION['usuario'])) {
-        echo "Até mais ". $_SESSION['nome'];
+        $user = $_SESSION['usuario'];
+       ?>
+        <div class="popup">
+            <b><p class="popup">Até mais <?php echo"$user" ?>, redirecionando</p></b>
+        </div>
+       <?php
     } else {
-        echo "<br>Você não está em uma conta.";
+        ?>
+        <div class="popup">
+            <b><p class="popup">Você não está em uma conta, redirecionando</p></b>
+        </div>
+       <?php
     }
     session_destroy();
 ?>
-<head>
-    <meta http-equiv = 'refresh' content = '3; url = ../pages/login.php'>
-</head>
