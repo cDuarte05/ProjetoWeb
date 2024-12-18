@@ -34,6 +34,18 @@ if (isset($_SESSION['usuario'])) {
                 echo "<br>".$sql;
             }
         }
+        if (isset($_POST['finalizar'])) {
+            $idAgendamento = $_POST['finalizar'];
+            $sql = "UPDATE agendamentos SET status = 'finalizado' WHERE id = $idAgendamento;";
+            try {
+                $result = mysqli_query($conection, $sql);
+                header('Location: ../pages/reservas.php');
+            }
+            catch (mysqli_sql_exception $e) {
+                echo "Exception: ". $e->getMessage();
+                echo "<br>".$sql;
+            }
+        }
     } else {
         header('Location: ../pages/reservas.php');
         exit;

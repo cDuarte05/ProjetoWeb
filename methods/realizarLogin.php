@@ -35,11 +35,14 @@
         if ($conta[0] == 'admin') {
             if ($conta[2] == '123456') {
                 ?>
+                    <head>
+                        <link rel='stylesheet' href='../style.css'>
+                    </head>
                     <div class="popup">
-                        <p>Como primeiro acesso de administrador, por favor, altere a senha: <br></p>
+                        <p class="popup">Como primeiro acesso de administrador, por favor, altere a senha: <br></p>
                         <form action="alterarSenha.php" method="POST">
-                            <input style="width: 200px;" required name="novaSenha" type="password" placeholder="Insíra a nova senha de admin">
-                            <input type="submit" value="Alterar">
+                            <input required name="novaSenha" type="password" placeholder="Insíra a nova senha de admin">
+                            <button type="submit">Alterar</button>
                         </form>
                     </div>
                 <?php

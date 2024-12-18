@@ -64,6 +64,11 @@ if (!isset($_SESSION['usuario'])) {
                 <a href="login.php" class="botao">Acessar Sistema</a>
             </section>
         </main>
+        <footer>
+            <p>&copy; 2024 ONG Natureza Viva<br>
+            Feito por:<br>
+            Luis Miguel e Henrique Duarte</p>
+        </footer>
     </body>
 <?php
     exit;
@@ -122,8 +127,16 @@ if (!isset($_SESSION['usuario'])) {
                 foreach ($agendamentos as $agendamento) {
                     echo "<li>Data: " . htmlspecialchars($agendamento['data_agendamento']) . 
                          " - Horário: " . htmlspecialchars($agendamento['horario_inicio']) . 
-                         " - " . htmlspecialchars($agendamento['horario_fim']) . 
-                         " - Status: " . htmlspecialchars($agendamento['status']) . "</li>";
+                         " - " . htmlspecialchars($agendamento['horario_fim']);
+                         if ($agendamento['status'] == 'pendente') {
+                            echo  " - Status: Pendente </li>";
+                        }
+                        if ($agendamento['status'] == 'finalizado') {
+                            echo  " - Status: Finalizado </li>";
+                        }
+                        if ($agendamento['status'] == 'aberto_com_ocorrencia') {
+                            echo  " - Status: Aberto com Ocorrência </li>";
+                        }
                 }
                 echo "</ul>";
             } else {
@@ -179,22 +192,12 @@ if (!isset($_SESSION['usuario'])) {
                 </tbody>
             </table>
             </div>
-<!-- 
-            <section>
-                <form id="form-agendamento" action="../methods/agendarAuditorio.php" method="POST">
-                    <label for="data">Data do Agendamento:</label>
-                    <input type="date" id="data" name="data" required>
-
-                    <label for="horario_inicio">Horário de Início:</label>
-                    <input type="time" id="horario_inicio" name="horario_inicio" step="1"required>
-
-                    <label for="horario_fim">Horário de Fim:</label>
-                    <input type="time" id="horario_fim" name="horario_fim" step="1" required>
-
-                    <button type="submit">Agendar</button>
-                </form>
-            </section> -->
         </section>
     </main>
+    <footer>
+        <p>&copy; 2024 ONG Natureza Viva<br>
+        Feito por:<br>
+        Luis Miguel e Henrique Duarte</p>
+    </footer>   
 </body>
 </html>

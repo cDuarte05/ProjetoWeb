@@ -12,12 +12,14 @@
         $sql_query = "UPDATE usuario SET senha = '$novaSenha' WHERE nomeUsuario = '$usuario' AND senha = '$senha' ";
         echo "<head>";
         echo "    <meta http-equiv = 'refresh' content = '3; url = ../pages/login.php'/>";
+        echo "    <link rel='stylesheet' href='../style.css'>";
         echo "</head>";
         try {
             mysqli_query($conection, $sql_query);
-            echo "Senha atualizada<br>"; 
+            echo "<div class='popup'><p class='popup'>Senha atualizada</p></div>"; 
         } catch (mysqli_sql_exception $e) {
-            echo "<br>Erro ao tentar atualizar a senha: ". $e->getMessage();
+            echo "<div class='popup'><p class='popup'>Erro ao tentar atualizar a senha: {$e->getMessage()}</p></div>"; 
+
         }
     }
 ?>

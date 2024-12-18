@@ -1,11 +1,15 @@
 
 body {
+    height: 100%;
     font-family: Arial, sans-serif;
     line-height: 1.6;
     background-color: #f9f9f9;
+    min-height: 100vh;
     color: #333;
     margin: 0;
     padding: 0;
+    display: flex;
+    flex-direction: column;
 }
 
 
@@ -15,6 +19,19 @@ header {
     padding: 20px 10px;
     text-align: center;
     border-bottom: 4px solid #2E7D32;
+}
+
+footer {
+    border-top: 4px solid #2E7D32;
+    background-color: #4CAF50;
+    color: white;
+    width: 100%;
+    position: relative;
+    height: 110px;
+}
+
+footer p {
+    margin-left: 10px;
 }
 
 header h1 {
@@ -71,7 +88,9 @@ header h1 {
 
 
 main {
-    max-width: 800px;
+    width: fit-content;
+    min-width: 75%;
+    max-width: 900px;
     margin: 20px auto;
     padding: 20px;
     background-color: #ffffff;
@@ -190,13 +209,23 @@ div.popup {
     padding: 15px;
     height: fit-content;
     width: fit-content;
-    margin: auto;
-    margin-top: 18%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 10%;
 }
 
 p.popup {
     color: white;
     text-align: center;
+}
+
+form.space {
+    margin-left: 4px;
+}
+
+td.space {
+    display: flex;
+    flex-direction: row;
 }
 
 a.popup {
@@ -217,6 +246,13 @@ a.popup:hover {
 
 img.logo {
     width: 130px;
+}
+
+img {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 65%;
 }
 
 /* Estilos para telas com largura máxima de 1024px */
@@ -256,6 +292,15 @@ img.logo {
 
     form button {
         width: 150px;
+    }
+    
+    td.space {
+        display: flex;
+        flex-direction: column;
+    }
+
+    form.space {
+        margin-top: 4px;
     }
 
     button {

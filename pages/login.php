@@ -73,5 +73,10 @@
             </form>
     </section>
     </main>
+    <footer>
+        <p>&copy; 2024 ONG Natureza Viva<br>
+        Feito por:<br>
+        Luis Miguel e Henrique Duarte</p>
+    </footer>
 </body>
 </html>

@@ -49,8 +49,7 @@ session_start(); ?>
                         <h2>Agendamentos aguardando resposta:</h2>
                             <?php
                                 $sql = "SELECT id, usuario_id, data_agendamento, horario_inicio, horario_fim, status 
-                                FROM agendamentos WHERE status = 'pendente' OR 
-                                status = 'aberto_com_ocorrencia';";
+                                FROM agendamentos WHERE status = 'pendente';";
                                 $result = mysqli_query($conection, $sql);
                                 $total = mysqli_num_rows($result);
                                 if ($total > 0) {
@@ -74,7 +73,7 @@ session_start(); ?>
                                         <td>{$row['data_agendamento']}</td>
                                         <td>{$row['horario_inicio']}</td>
                                         <td>{$row['horario_fim']}</td>
-                                        <td>{$row['status']}</td>
+                                        <td>Pendente</td>
                                         <td>
                                         <form style='display:flex; flex-direction:row' method='POST' action='../methods/responderAgendamento.php'>
                                             <button type='submit' name='aceitar' value='{$row['id']}'>Aceitar</button>
@@ -88,12 +87,95 @@ session_start(); ?>
                             ?>
                         </table>
                         </div>
-                        <h2>Agendamentos respondidos:</h2>
+                        <h2>Agendamentos Confirmados:</h2>
                             <?php
                                 $sql = "SELECT id, usuario_id, data_agendamento, horario_inicio, horario_fim, status 
                                 FROM agendamentos 
-                                WHERE status = 'confirmado' OR
-                                status = 'finalizado'";
+                                WHERE status = 'confirmado'";
+                                $result = mysqli_query($conection, $sql);
+                                $total = mysqli_num_rows($result);
+                                if ($total > 0) {
+                                    ?>
+                                        <div class="table">
+                                        <table class="listaRespondidas">
+                                            <tr>
+                                                <th>Pedido</th> 
+                                                <th>Usuário</th> 
+                                                <th>Data</th>
+                                                <th>Horário Início</th>
+                                                <th>Horário Fim</th>
+                                                <th>Status</th>
+                                                <th>Ação</th>
+                                            </tr>
+                                    <?php
+                                    for ($i = 0; $i < $total; $i++) {
+                                        $row = mysqli_fetch_assoc($result);
+                                        echo "<tr><td>{$row['id']}</td>
+                                        <td>{$row['usuario_id']}</td>
+                                        <td>{$row['data_agendamento']}</td>
+                                        <td>{$row['horario_inicio']}</td>
+                                        <td>{$row['horario_fim']}</td>
+                                        <td>Confirmado</td>
+                                        <td class='space'><form method='POST' action='../methods/responderAgendamento.php'>
+                                            <button type='submit' name='finalizar' value='{$row['id']}'>Finalizar</button>
+                                        </form>
+                                        <form class='space' method='POST' action='registrarOcorrência.php'>
+                                            <button type='submit' name='ocorrencia' value='{$row['id']}'>Ocorrência</button>
+                                        </form>
+                                        </td></tr>";
+                                    }
+                                } else {
+                                    echo "<p>Não existem agendamentos confirmados.</p>";
+                                }
+                            ?>
+                        </table>
+                        </div>
+                        <h2>Agendamentos com Ocorrência:</h2>
+                            <?php
+                                $sql = "SELECT id, usuario_id, data_agendamento, horario_inicio, horario_fim, status, avaliacao 
+                                FROM agendamentos 
+                                WHERE status = 'aberto_com_ocorrencia'";
+                                $result = mysqli_query($conection, $sql);
+                                $total = mysqli_num_rows($result);
+                                if ($total > 0) {
+                                    ?>
+                                        <div class="table">
+                                        <table class="listaRespondidas">
+                                            <tr>
+                                                <th>Pedido</th> 
+                                                <th>Usuário</th> 
+                                                <th>Data</th>
+                                                <th>Horário Início</th>
+                                                <th>Horário Fim</th>
+                                                <th>Status</th>
+                                                <th>Observação</th>
+                                                <th>Ação</th>
+                                            </tr>
+                                    <?php
+                                    for ($i = 0; $i < $total; $i++) {
+                                        $row = mysqli_fetch_assoc($result);
+                                        echo "<tr><td>{$row['id']}</td>
+                                        <td>{$row['usuario_id']}</td>
+                                        <td>{$row['data_agendamento']}</td> 
+                                        <td>{$row['horario_inicio']}</td>
+                                        <td>{$row['horario_fim']}</td>
+                                        <td>Aberto com Ocorrência</td>
+                                        <td>{$row['avaliacao']}</td>
+                                        <td><form style='display:flex; flex-direction:row' method='POST' action='../methods/responderAgendamento.php'>
+                                            <button type='submit' name='finalizar' value='{$row['id']}'>Finalizar</button>
+                                        </form></td></tr>";
+                                    }
+                                } else {
+                                    echo "<p>Não existem agendamentos confirmados.</p>";
+                                }
+                            ?>
+                        </table>
+                        </div>
+                        <h2>Agendamentos Finalizados:</h2>
+                            <?php
+                                $sql = "SELECT id, usuario_id, data_agendamento, horario_inicio, horario_fim, status 
+                                FROM agendamentos 
+                                WHERE status = 'finalizado'";
                                 $result = mysqli_query($conection, $sql);
                                 $total = mysqli_num_rows($result);
                                 if ($total > 0) {
@@ -116,15 +198,20 @@ session_start(); ?>
                                         <td>{$row['data_agendamento']}</td>
                                         <td>{$row['horario_inicio']}</td>
                                         <td>{$row['horario_fim']}</td>
-                                        <td>{$row['status']}</td></tr>";
+                                        <td>Finalizado</td></tr>";
                                     }
                                 } else {
-                                    echo "<p>Não existem agendamentos respondidos.</p>";
+                                    echo "<p>Não existem agendamentos finalizados.</p>";
                                 }
                             ?>
                         </table>
                         </div>
                     </main>
+                    <footer>
+                        <p>&copy; 2024 ONG Natureza Viva<br>
+                        Feito por:<br>
+                        Luis Miguel e Henrique Duarte</p>
+                    </footer>
                 </body>
             <?php
         } else {
@@ -164,6 +251,7 @@ session_start(); ?>
                 </div>
                 <body>
                     <main>
+                        <h2>Suas reservas:</h2>
                             <?php
                                 $sql = "SELECT id, usuario_id, data_agendamento, horario_inicio, horario_fim, status 
                                 FROM agendamentos 
@@ -191,8 +279,16 @@ session_start(); ?>
                                         <td>{$row['usuario_id']}</td>
                                         <td>{$row['data_agendamento']}</td>
                                         <td>{$row['horario_inicio']}</td>
-                                        <td>{$row['horario_fim']}</td>
-                                        <td>{$row['status']}</td></tr>";
+                                        <td>{$row['horario_fim']}</td>";
+                                        if ($row['status'] == 'pendente') {
+                                            echo "<td>Pendente</td></tr>";
+                                        }
+                                        if ($row['status'] == 'finalizado') {
+                                            echo "<td>Finalizado</td></tr>";
+                                        }
+                                        if ($row['status'] == 'aberto_com_ocorrencia') {
+                                            echo "<td>Aberto com Ocorrência</td></tr>";
+                                        }
                                     }
                                 } else {
                                     echo "<p>Você não possuí nenhum agendamento registrado.</p>";
@@ -201,6 +297,11 @@ session_start(); ?>
                         </table>
                         </div>
                     </main>
+                    <footer>
+                        <p>&copy; 2024 ONG Natureza Viva<br>
+                        Feito por:<br>
+                        Luis Miguel e Henrique Duarte</p>
+                    </footer>       
                 </body>
             <?php
         }
@@ -255,6 +356,11 @@ session_start(); ?>
                         <a href="login.php" class="botao">Acessar Sistema</a>
                     </section>
                 </main>
+                <footer>
+                    <p>&copy; 2024 ONG Natureza Viva<br>
+                    Feito por:<br>
+                    Luis Miguel e Henrique Duarte</p>
+                </footer>
             </body>
         <?php
     }
